@@ -47,7 +47,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
       }
     );
 
-    new custom.AwsCustomResource(this, "moviesddbInitData", {
+    new custom.AwsCustomResource(this, "gamesddbInitData", {
       onCreate: {
         service: "DynamoDB",
         action: "batchWriteItem",
@@ -56,7 +56,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
             [gamesTable.tableName]: generateBatch(games),
           },
         },
-        physicalResourceId: custom.PhysicalResourceId.of("moviesddbInitData"), //.of(Date.now().toString()),
+        physicalResourceId: custom.PhysicalResourceId.of("gamesddbInitData"), //.of(Date.now().toString()),
       },
       policy: custom.AwsCustomResourcePolicy.fromSdkCalls({
         resources: [gamesTable.tableArn],

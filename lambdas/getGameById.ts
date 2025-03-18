@@ -9,20 +9,24 @@ export const handler: Handler = async (event, context) => {
     console.log("Event: ", JSON.stringify(event));
     const queryString = event?.queryStringParameters;
     const gameId = queryString ? parseInt(queryString.gameId) : undefined;
+    const platform = queryString?.platform;
 
-    if (!gameId) {
+    if (!gameId || !platform) {
       return {
         statusCode: 404,
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ Message: "Missing movie Id" }),
+        body: JSON.stringify({ Message: "Missing game Id or platform" }),
       };
     }
     const commandOutput = await ddbDocClient.send(
       new GetCommand({
         TableName: process.env.TABLE_NAME,
-        Key: { id: gameId },
+        Key: { 
+          game_id: gameId,
+          platform: platform,
+         },
       })
     );
     if (!commandOutput.Item) {
@@ -31,7 +35,7 @@ export const handler: Handler = async (event, context) => {
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ Message: "Invalid movie Id" }),
+        body: JSON.stringify({ Message: "Invalid game Id" }),
       };
     }
     const body = {
