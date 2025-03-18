@@ -37,7 +37,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
       {
         architecture: lambda.Architecture.ARM_64,
         runtime: lambda.Runtime.NODEJS_20_X,
-        entry: `${__dirname}/../lambdas/getMovieById.ts`,
+        entry: `${__dirname}/../lambdas/getGameById.ts`,
         timeout: cdk.Duration.seconds(10),
         memorySize: 128,
         environment: {
