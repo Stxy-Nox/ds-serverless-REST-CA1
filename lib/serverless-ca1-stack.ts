@@ -12,7 +12,13 @@ export class ServerlessCa1Stack extends cdk.Stack {
     super(scope, id, props);
 
     //Tables
-
+    const gamesTable = new dynamodb.Table(this, "GamesTable", {
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      partitionKey: { name: "platform", type: dynamodb.AttributeType.STRING },
+      sortKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      tableName: "Games",
+    });
 
     //Funcitons
     const testFn = new lambdanode.NodejsFunction(this, "TestFn", {
