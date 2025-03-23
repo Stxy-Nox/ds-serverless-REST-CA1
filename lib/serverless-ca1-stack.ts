@@ -70,6 +70,18 @@ export class ServerlessCa1Stack extends cdk.Stack {
       }
       );
 
+    const newGameFn = new lambdanode.NodejsFunction(this, "AddGameFn", {
+      architecture: lambda.Architecture.ARM_64,
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: `${__dirname}/../lambdas/addGame.ts`,
+      timeout: cdk.Duration.seconds(10),
+      memorySize: 128,
+      environment: {
+        TABLE_NAME: gamesTable.tableName,
+        REGION: "eu-west-1",
+      },
+    });
+
     new custom.AwsCustomResource(this, "gamesddbInitData", {
       onCreate: {
         service: "DynamoDB",
