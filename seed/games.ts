@@ -200,46 +200,46 @@ export const games: Game[] = [
     user_review: 8.4,
     isEighthGen: false
   },
-  {
-    game_id: 21,
-    name: 'Super Mario Odyssey',
-    platform: 'Switch',
-    release_date: '27-Oct-17',
-    summary: "New Evolution of Mario Sandbox-Style Gameplay. Mario embarks on a new journey through unknown worlds, running and jumping through huge 3D worlds in the first sandbox-style Mario game since Super Mario 64 and Super Mario Sunshine. Set sail between expansive worlds aboard an airship, and perform all-new actions, such as throwing Mario's cap.",
-    meta_score: 97,
-    user_review: 8.9,
-    isEighthGen: false
-  },
-  {
-    game_id: 22,
-    name: 'Halo: Combat Evolved',
-    platform: 'Xbox',
-    release_date: '14-Nov-01',
-    summary: "Enter the mysterious world of Halo, an alien planet shaped like a ring. As mankind's super soldier Master Chief, you must uncover the secrets of Halo and fend off the attacking Covenant. During your missions, you'll battle on foot, in vehicles, inside, and outside with alien and human weaponry. Your objectives include attacking enemy outposts, raiding underground labs for advanced technology, rescuing fallen comrades, and sniping enemy forces. Halo also lets you battle three other players via intense split screen combat or fight cooperatively with a friend through the single-player missions.",
-    meta_score: 97,
-    user_review: 8.7,
-    isEighthGen: false
-  },
-  {
-    game_id: 23,
-    name: 'The House in Fata Morgana - Dreams of the Revenants Edition -',
-    platform: 'Switch',
-    release_date: '9-Apr-21',
-    summary: 'A gothic suspense tale set in a cursed mansion. ?\x80?The House in Fata Morgana?\x80? is a full-length visual novel spanning nearly a millennium that deals in tragedy, human nature, and insanity. This version includes three games and more: 1: The House in Fata Morgana: the main storyline. 2: A Requiem for Innocence: a prequel shedding light on the origins of Fata Morgana?\x80?s terrible curse. 3: Reincarnation: a sequel featuring the central cast members reincarnated in the present day. *The part including voices 4: Other additional short stories.',
-    meta_score: 97,
-    user_review: 8.2,
-    isEighthGen: false
-  },
-  {
-    game_id: 24,
-    name: 'NFL 2K1',
-    platform: 'Dreamcast',
-    release_date: '7-Sep-00',
-    summary: 'In the end, NFL 2K1 is a deeper, more refined version of the original game.',
-    meta_score: 97,
-    user_review: 6.2,
-    isEighthGen: false
-  },
+  // {
+  //   game_id: 21,
+  //   name: 'Super Mario Odyssey',
+  //   platform: 'Switch',
+  //   release_date: '27-Oct-17',
+  //   summary: "New Evolution of Mario Sandbox-Style Gameplay. Mario embarks on a new journey through unknown worlds, running and jumping through huge 3D worlds in the first sandbox-style Mario game since Super Mario 64 and Super Mario Sunshine. Set sail between expansive worlds aboard an airship, and perform all-new actions, such as throwing Mario's cap.",
+  //   meta_score: 97,
+  //   user_review: 8.9,
+  //   isEighthGen: false
+  // },
+  // {
+  //   game_id: 22,
+  //   name: 'Halo: Combat Evolved',
+  //   platform: 'Xbox',
+  //   release_date: '14-Nov-01',
+  //   summary: "Enter the mysterious world of Halo, an alien planet shaped like a ring. As mankind's super soldier Master Chief, you must uncover the secrets of Halo and fend off the attacking Covenant. During your missions, you'll battle on foot, in vehicles, inside, and outside with alien and human weaponry. Your objectives include attacking enemy outposts, raiding underground labs for advanced technology, rescuing fallen comrades, and sniping enemy forces. Halo also lets you battle three other players via intense split screen combat or fight cooperatively with a friend through the single-player missions.",
+  //   meta_score: 97,
+  //   user_review: 8.7,
+  //   isEighthGen: false
+  // },
+  // {
+  //   game_id: 23,
+  //   name: 'The House in Fata Morgana - Dreams of the Revenants Edition -',
+  //   platform: 'Switch',
+  //   release_date: '9-Apr-21',
+  //   summary: 'A gothic suspense tale set in a cursed mansion. ?\x80?The House in Fata Morgana?\x80? is a full-length visual novel spanning nearly a millennium that deals in tragedy, human nature, and insanity. This version includes three games and more: 1: The House in Fata Morgana: the main storyline. 2: A Requiem for Innocence: a prequel shedding light on the origins of Fata Morgana?\x80?s terrible curse. 3: Reincarnation: a sequel featuring the central cast members reincarnated in the present day. *The part including voices 4: Other additional short stories.',
+  //   meta_score: 97,
+  //   user_review: 8.2,
+  //   isEighthGen: false
+  // },
+  // {
+  //   game_id: 24,
+  //   name: 'NFL 2K1',
+  //   platform: 'Dreamcast',
+  //   release_date: '7-Sep-00',
+  //   summary: 'In the end, NFL 2K1 is a deeper, more refined version of the original game.',
+  //   meta_score: 97,
+  //   user_review: 6.2,
+  //   isEighthGen: false
+  // },
   // {
   //   game_id: 25,
   //   name: 'Half-Life 2',

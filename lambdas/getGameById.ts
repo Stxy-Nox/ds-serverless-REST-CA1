@@ -78,6 +78,35 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ data: result.Items }),
       };
+    }else if (!gameId && platform) {
+
+      result = await ddbDocClient.send(
+        new QueryCommand({
+          TableName: process.env.TABLE_NAME,
+          KeyConditionExpression: "platform = :platform",
+          ExpressionAttributeValues: {
+            ":platform": platform,
+          },
+        })
+      );
+      if (!result.Items || result.Items.length === 0) {
+        return {
+          statusCode: 404,
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ Message: "No games found for the provided platform" }),
+        };
+      }
+      return {
+        statusCode: 200,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ data: result.Items }),
+      };
+    } else {
+      return {
+        statusCode: 400,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ Message: "Missing gameId or platform parameter" }),
+      };
     }
   } catch (error: any) {
     console.log(JSON.stringify(error));
