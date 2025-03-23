@@ -16,15 +16,20 @@ export class ServerlessCa1Stack extends cdk.Stack {
     //Tables
     const gamesTable = new dynamodb.Table(this, "GamesTable", {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      partitionKey: { name: "platform", type: dynamodb.AttributeType.STRING },
-      sortKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
+      sortKey: { name: "name", type: dynamodb.AttributeType.STRING },
+      partitionKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       tableName: "Games",
     });
 
+    // gamesTable.addGlobalSecondaryIndex({
+    //   indexName: "GameIdIndex",
+    //   partitionKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
+    // });
+    
     gamesTable.addGlobalSecondaryIndex({
-      indexName: "GameIdIndex",
-      partitionKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
+      indexName: "PlatformIndex",
+      partitionKey: { name: "platform", type: dynamodb.AttributeType.STRING },
     });
     
 
