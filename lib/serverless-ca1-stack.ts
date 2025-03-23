@@ -22,14 +22,21 @@ export class ServerlessCa1Stack extends cdk.Stack {
       tableName: "Games",
     });
 
+    gamesTable.addGlobalSecondaryIndex({
+      indexName: "GameIdIndex",
+      partitionKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
+    });
+    
+
     //Funcitons
-    const testFn = new lambdanode.NodejsFunction(this, "TestFn", {
-      architecture: lambda.Architecture.ARM_64,
-      runtime: lambda.Runtime.NODEJS_20_X,
-      entry: `${__dirname}/../lambdas/test.ts`,
-      timeout: cdk.Duration.seconds(10),
-      memorySize: 128,
-    })
+
+    // const testFn = new lambdanode.NodejsFunction(this, "TestFn", {
+    //   architecture: lambda.Architecture.ARM_64,
+    //   runtime: lambda.Runtime.NODEJS_20_X,
+    //   entry: `${__dirname}/../lambdas/test.ts`,
+    //   timeout: cdk.Duration.seconds(10),
+    //   memorySize: 128,
+    // })
 
     const getGameByIdFn = new lambdanode.NodejsFunction(
       this,
@@ -80,17 +87,10 @@ export class ServerlessCa1Stack extends cdk.Stack {
     });
 
     //Permissions
-    // const getGameByIdURL = getGameByIdFn.addFunctionUrl({
-    //   authType: lambda.FunctionUrlAuthType.NONE,
-    //   cors: {
-    //     allowedOrigins: ["*"],
-    //   },
-    // });
-
     gamesTable.grantReadData(getGameByIdFn)
     gamesTable.grantReadData(getAllGamesFn)
 
-    // new cdk.CfnOutput(this, "Get Game Function Url", { value: getGameByIdURL.url });
+
     
     //REST API
     const api = new apig.RestApi(this, "RestAPI", {
@@ -106,11 +106,18 @@ export class ServerlessCa1Stack extends cdk.Stack {
       },
     });
     //Endpoints
-    const gameEndpoint = api.root.addResource("games");
-    gameEndpoint.addMethod(
+    const gamesEndpoint = api.root.addResource("games");
+    gamesEndpoint.addMethod(
       "GET",
       new apig.LambdaIntegration(getAllGamesFn, { proxy: true })
     )
-    ;
+
+
+
+    const specificGameEndpoint = gamesEndpoint.addResource("{gameId}");
+    specificGameEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getGameByIdFn, {proxy:true})
+    )
   }
 }
