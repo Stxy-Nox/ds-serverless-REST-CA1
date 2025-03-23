@@ -101,7 +101,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
     //Permissions
     gamesTable.grantReadData(getGameByIdFn)
     gamesTable.grantReadData(getAllGamesFn)
-
+    gamesTable.grantReadWriteData(newGameFn)
 
     
     //REST API
@@ -124,7 +124,10 @@ export class ServerlessCa1Stack extends cdk.Stack {
       new apig.LambdaIntegration(getAllGamesFn, { proxy: true })
     )
 
-
+    gamesEndpoint.addMethod(
+      "POST",
+      new apig.LambdaIntegration(newGameFn,{proxy:true})
+    )
 
     const specificGameEndpoint = gamesEndpoint.addResource("{gameId}");
     specificGameEndpoint.addMethod(
