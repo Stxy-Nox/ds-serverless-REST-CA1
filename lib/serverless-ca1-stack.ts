@@ -47,6 +47,22 @@ export class ServerlessCa1Stack extends cdk.Stack {
       }
     );
 
+    const getAllGamesFn = new lambdanode.NodejsFunction(
+      this,
+      "GetAllGamesFn",
+      {
+        architecture: lambda.Architecture.ARM_64,
+        runtime: lambda.Runtime.NODEJS_20_X,
+        entry: `${__dirname}/../lambdas/getAllGames.ts`,
+        timeout: cdk.Duration.seconds(10),
+        memorySize: 128,
+        environment: {
+          TABLE_NAME: gamesTable.tableName,
+          REGION: 'eu-west-1',
+        },
+      }
+      );
+
     new custom.AwsCustomResource(this, "gamesddbInitData", {
       onCreate: {
         service: "DynamoDB",
@@ -64,19 +80,37 @@ export class ServerlessCa1Stack extends cdk.Stack {
     });
 
     //Permissions
-    const getGameByIdURL = getGameByIdFn.addFunctionUrl({
-      authType: lambda.FunctionUrlAuthType.NONE,
-      cors: {
-        allowedOrigins: ["*"],
-      },
-    });
+    // const getGameByIdURL = getGameByIdFn.addFunctionUrl({
+    //   authType: lambda.FunctionUrlAuthType.NONE,
+    //   cors: {
+    //     allowedOrigins: ["*"],
+    //   },
+    // });
 
     gamesTable.grantReadData(getGameByIdFn)
+    gamesTable.grantReadData(getAllGamesFn)
 
-    new cdk.CfnOutput(this, "Get Game Function Url", { value: getGameByIdURL.url });
+    // new cdk.CfnOutput(this, "Get Game Function Url", { value: getGameByIdURL.url });
     
     //REST API
-
+    const api = new apig.RestApi(this, "RestAPI", {
+      description: "demo api",
+      deployOptions: {
+        stageName: "dev",
+      },
+      defaultCorsPreflightOptions: {
+        allowHeaders: ["Content-Type", "X-Amz-Date"],
+        allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
+        allowCredentials: true,
+        allowOrigins: ["*"],
+      },
+    });
     //Endpoints
+    const gameEndpoint = api.root.addResource("games");
+    gameEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getAllGamesFn, { proxy: true })
+    )
+    ;
   }
 }
