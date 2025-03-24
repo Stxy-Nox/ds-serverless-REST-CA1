@@ -161,7 +161,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
     const gameResource = gamesEndpoint.addResource("{gameId}");
     gameResource.addMethod(
       "GET",
-      new apig.LambdaIntegration(newGameFn, { proxy: true }), 
+      new apig.LambdaIntegration(getGameByIdFn, { proxy: true }), 
       // { apiKeyRequired: true }
     )
 
