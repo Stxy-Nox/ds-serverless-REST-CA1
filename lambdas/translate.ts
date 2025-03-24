@@ -101,14 +101,17 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
         body: JSON.stringify({ message: "Translation failed" }),
       };
     }
+    const newTranslations = {
+      ...(item.translations || {}),
+      [targetLanguage]: translatedText,
+    };
 
     // 6. 将翻译结果缓存到 DynamoDB：更新 item.translations 为 map 类型（如果不存在则创建）
     const updateCommand = new UpdateCommand({
       TableName: process.env.TABLE_NAME,
       Key: { game_id: gameId, name: name },
-      UpdateExpression: "SET translations.#lang = :translatedText",
-      ExpressionAttributeNames: { "#lang": targetLanguage },
-      ExpressionAttributeValues: { ":translatedText": translatedText },
+      UpdateExpression: "SET translations = :newTranslations",
+      ExpressionAttributeValues: { ":newTranslations": newTranslations },
       ReturnValues: "ALL_NEW",
     });
     const updateResult = await ddbDocClient.send(updateCommand);

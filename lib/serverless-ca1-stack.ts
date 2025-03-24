@@ -132,6 +132,10 @@ export class ServerlessCa1Stack extends cdk.Stack {
       actions: ['translate:TranslateText'],
       resources: ['*'], // Amazon Translate 不支持资源级别权限，因此使用 '*'
     }));
+    translateGameFn.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['comprehend:DetectDominantLanguage'],
+      resources: ['*'],
+    }));
 
     //Permissions
     gamesTable.grantReadData(getGameByIdFn)
