@@ -87,6 +87,18 @@ export class ServerlessCa1Stack extends cdk.Stack {
       },
     });
 
+    const updateGameFn = new lambdanode.NodejsFunction(this, "UpdateGameFn", {
+      architecture: lambda.Architecture.ARM_64,
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: `${__dirname}/../lambdas/updateGame.ts`,
+      timeout: cdk.Duration.seconds(10),
+      memorySize: 128,
+      environment: {
+        TABLE_NAME: gamesTable.tableName,
+        REGION: 'eu-west-1',
+      },
+    });
+
     new custom.AwsCustomResource(this, "gamesddbInitData", {
       onCreate: {
         service: "DynamoDB",
@@ -107,6 +119,7 @@ export class ServerlessCa1Stack extends cdk.Stack {
     gamesTable.grantReadData(getGameByIdFn)
     gamesTable.grantReadData(getAllGamesFn)
     gamesTable.grantReadWriteData(newGameFn)
+    gamesTable.grantReadWriteData(updateGameFn);
 
     
     //REST API
@@ -139,5 +152,10 @@ export class ServerlessCa1Stack extends cdk.Stack {
       "GET",
       new apig.LambdaIntegration(getGameByIdFn, {proxy:true})
     )
+    const specificGameUpdateEndpoint = gamesEndpoint.addResource("{name}");
+      specificGameUpdateEndpoint.addMethod(
+      "PUT",
+      new apig.LambdaIntegration(updateGameFn, { proxy: true })
+    );
   }
 }
