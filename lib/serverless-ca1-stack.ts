@@ -159,17 +159,17 @@ export class ServerlessCa1Stack extends cdk.Stack {
       },
     });
 
-    // const apiKey = api.addApiKey("ApiKey");
+    const apiKey = api.addApiKey("ApiKey");
 
-    // const usagePlan = api.addUsagePlan("UsagePlan", {
-    //   name: "BasicUsagePlan",
-    //   throttle: {
-    //     rateLimit: 10,
-    //     burstLimit: 2,
-    //   },
-    // });
-    // usagePlan.addApiKey(apiKey);
-    // usagePlan.addApiStage({ stage: api.deploymentStage });
+    const usagePlan = api.addUsagePlan("UsagePlan", {
+      name: "BasicUsagePlan",
+      throttle: {
+        rateLimit: 10,
+        burstLimit: 2,
+      },
+    });
+    usagePlan.addApiKey(apiKey);
+    usagePlan.addApiStage({ stage: api.deploymentStage });
     //Endpoints
     const gamesEndpoint = api.root.addResource("games");
     gamesEndpoint.addMethod(
@@ -178,22 +178,23 @@ export class ServerlessCa1Stack extends cdk.Stack {
     )
     gamesEndpoint.addMethod(
       "POST",
-      new apig.LambdaIntegration(newGameFn,{proxy:true})
+      new apig.LambdaIntegration(newGameFn,{proxy:true}),
+      { apiKeyRequired: true }
     )
 
     const gameResource = gamesEndpoint.addResource("{gameId}");
     gameResource.addMethod(
       "GET",
       new apig.LambdaIntegration(getGameByIdFn, { proxy: true }), 
-      // { apiKeyRequired: true }
     )
 
     const updateResource = gameResource.addResource("{name}");
     updateResource.addMethod(
       "PUT", 
       new apig.LambdaIntegration(updateGameFn, { proxy: true }), 
-      // { apiKeyRequired: true });
-    )
+      { apiKeyRequired: true }
+    );
+    
     const translationResource = updateResource.addResource("translation");
     translationResource.addMethod(
       "GET", 
