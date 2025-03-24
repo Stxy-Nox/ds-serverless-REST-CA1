@@ -8,3 +8,9 @@ export type Game = {
   user_review: number,
   isEighthGen: boolean
 }
+
+export type GameQueryParams = {
+  game_id: string;
+  name?: string;
+  platform?: string;
+}

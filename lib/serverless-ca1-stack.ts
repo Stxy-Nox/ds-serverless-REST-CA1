@@ -27,10 +27,10 @@ export class ServerlessCa1Stack extends cdk.Stack {
     //   partitionKey: { name: "game_id", type: dynamodb.AttributeType.NUMBER },
     // });
     
-    gamesTable.addGlobalSecondaryIndex({
-      indexName: "PlatformIndex",
-      partitionKey: { name: "platform", type: dynamodb.AttributeType.STRING },
-    });
+    // gamesTable.addGlobalSecondaryIndex({
+    //   indexName: "PlatformIndex",
+    //   partitionKey: { name: "platform", type: dynamodb.AttributeType.STRING },
+    // });
     
 
     //Funcitons
