@@ -101,7 +101,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 11,
+    game_id: 1,
     name: 'Disco Elysium: The Final Cut',
     platform: 'PC',
     release_date: '30-Mar-21',
@@ -111,7 +111,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 12,
+    game_id: 2,
     name: 'Grand Theft Auto V',
     platform: 'Xbox 360',
     release_date: '17-Sep-13',
@@ -121,7 +121,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 13,
+    game_id: 3,
     name: "Tony Hawk's Pro Skater 2",
     platform: 'Dreamcast',
     release_date: '6-Nov-00',
@@ -131,7 +131,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 14,
+    game_id: 4,
     name: 'The Legend of Zelda: Breath of the Wild',
     platform: 'Switch',
     release_date: '3-Mar-17',
@@ -141,7 +141,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 15,
+    game_id: 5,
     name: "Tony Hawk's Pro Skater 3",
     platform: 'PlayStation 2',
     release_date: '28-Oct-01',
@@ -151,7 +151,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 16,
+    game_id: 6,
     name: 'Perfect Dark',
     platform: 'Nintendo 64',
     release_date: '22-May-00',
@@ -161,7 +161,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 17,
+    game_id: 7,
     name: 'Red Dead Redemption 2',
     platform: 'PlayStation 4',
     release_date: '26-Oct-18',
@@ -171,7 +171,7 @@ export const games: Game[] = [
     isEighthGen: true
   },
   {
-    game_id: 18,
+    game_id: 8,
     name: 'Grand Theft Auto V',
     platform: 'PlayStation 4',
     release_date: '18-Nov-14',
@@ -181,7 +181,7 @@ export const games: Game[] = [
     isEighthGen: true
   },
   {
-    game_id: 19,
+    game_id: 9,
     name: 'Metroid Prime',
     platform: 'GameCube',
     release_date: '17-Nov-02',
@@ -191,7 +191,7 @@ export const games: Game[] = [
     isEighthGen: false
   },
   {
-    game_id: 20,
+    game_id: 10,
     name: 'Grand Theft Auto III',
     platform: 'PlayStation 2',
     release_date: '22-Oct-01',
