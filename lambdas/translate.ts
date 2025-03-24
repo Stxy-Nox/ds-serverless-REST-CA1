@@ -20,16 +20,16 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
 
     // 1. 从路径参数中获取 game_id 和 name
     const pathParams = event.pathParameters;
-    if (!pathParams || !pathParams.game_id || !pathParams.name) {
+    if (!pathParams || !pathParams.gameId || !pathParams.name) {
       return {
         statusCode: 400,
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          message: "Missing game_id or name in path parameters",
+          message: "Missing gameId or name in path parameters",
         }),
       };
     }
-    const gameId = parseInt(pathParams.game_id);
+    const gameId = parseInt(pathParams.gameId);
     const name = pathParams.name;
     if (isNaN(gameId)) {
       return {

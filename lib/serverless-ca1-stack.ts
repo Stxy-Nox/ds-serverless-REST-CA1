@@ -8,6 +8,7 @@ import * as custom from "aws-cdk-lib/custom-resources";
 import * as apig from "aws-cdk-lib/aws-apigateway";
 import { generateBatch } from "../shared/util";
 import {games} from "../seed/games";
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class ServerlessCa1Stack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -126,6 +127,11 @@ export class ServerlessCa1Stack extends cdk.Stack {
         REGION: 'eu-west-1',
       },
     });
+
+    translateGameFn.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['translate:TranslateText'],
+      resources: ['*'], // Amazon Translate 不支持资源级别权限，因此使用 '*'
+    }));
 
     //Permissions
     gamesTable.grantReadData(getGameByIdFn)

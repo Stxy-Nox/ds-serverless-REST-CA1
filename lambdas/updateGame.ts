@@ -14,7 +14,9 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
       return {
         statusCode: 400,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: "Missing gameId or name in path parameters" }),
+        body: JSON.stringify({
+          message: "Missing gameId or name in path parameters",
+        }),
       };
     }
     const gameId = parseInt(pathParams.gameId);
