@@ -141,21 +141,20 @@ export class ServerlessCa1Stack extends cdk.Stack {
       "GET",
       new apig.LambdaIntegration(getAllGamesFn, { proxy: true })
     )
-
     gamesEndpoint.addMethod(
       "POST",
       new apig.LambdaIntegration(newGameFn,{proxy:true})
     )
 
-    const specificGameEndpoint = gamesEndpoint.addResource("{gameId}");
-    specificGameEndpoint.addMethod(
+    const gameResource = gamesEndpoint.addResource("{gameId}");
+    gameResource.addMethod(
       "GET",
       new apig.LambdaIntegration(getGameByIdFn, {proxy:true})
     )
-    const specificGameUpdateEndpoint = gamesEndpoint.addResource("{name}");
-      specificGameUpdateEndpoint.addMethod(
-      "PUT",
-      new apig.LambdaIntegration(updateGameFn, { proxy: true })
-    );
+
+    const updateResource = gameResource.addResource("{name}");
+    updateResource.addMethod(
+      "PUT", 
+      new apig.LambdaIntegration(updateGameFn, { proxy: true }));
   }
 }
