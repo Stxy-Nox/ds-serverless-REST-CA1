@@ -1,120 +1,82 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand} from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import {
+  DynamoDBDocumentClient,
+  QueryCommand,
+  QueryCommandInput,
+} from "@aws-sdk/lib-dynamodb";
+import Ajv from "ajv";
+import schema from "../shared/types.schema.json";
 
+const ajv = new Ajv();
+// const isValidQueryParams = ajv.compile(
+//   schema.definitions["GameQueryParams"] || {}
+// );
 
 const ddbDocClient = createDDbDocClient();
 
 export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
   try {
     console.log("Event: ", JSON.stringify(event));
-    const pathParameters  = event?.pathParameters;
-    const queryParams= event?.queryStringParameters;
 
-    const gameId = pathParameters?.gameId ? parseInt(pathParameters.gameId) : undefined;
-    const platform = queryParams?.platform;
-
-    // if (!gameId || !platform) {
-    //   return {
-    //     statusCode: 404,
-    //     headers: {
-    //       "content-type": "application/json",
-    //     },
-    //     body: JSON.stringify({ Message: "Missing game Id or platform" }),
-    //   };
-    // }
-
-    let result;
-
-    if(gameId && platform){
-      result = await ddbDocClient.send(
-        new GetCommand({
-          TableName: process.env.TABLE_NAME,
-          Key: { 
-            game_id: gameId,
-            platform: platform,
-          },
-        })
-      );
-      if (!result.Item|| result.Item.length === 0) {
-        return {
-          statusCode: 404,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ Message: "Invalid game Id or platform" }),
-        };
-      }
-      const body = {
-        data: result.Item,
-      };
+    const pathParams = event.pathParameters;
+    if (!pathParams || !pathParams.gameId) {
       return {
-        statusCode: 200,
+        statusCode: 404,
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify(body),
-      };
-    }else if(gameId && !platform){
-      result = await ddbDocClient.send(
-        new QueryCommand({
-          TableName: process.env.TABLE_NAME,
-          IndexName: "GameIdIndex",
-          KeyConditionExpression: "game_id = :gameId",
-          ExpressionAttributeValues: {
-            ":gameId": gameId,
-          },
-        })
-      );
-      if (!result.Items || result.Items.length === 0) {
-        return {
-          statusCode: 404,
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ Message: "No game found with the provided id" }),
-        };
-      }
-      return {
-        statusCode: 200,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ data: result.Items }),
-      };
-    }else if (!gameId && platform) {
-
-      result = await ddbDocClient.send(
-        new QueryCommand({
-          TableName: process.env.TABLE_NAME,
-          KeyConditionExpression: "platform = :platform",
-          ExpressionAttributeValues: {
-            ":platform": platform,
-          },
-        })
-      );
-      if (!result.Items || result.Items.length === 0) {
-        return {
-          statusCode: 404,
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ Message: "No games found for the provided platform" }),
-        };
-      }
-      return {
-        statusCode: 200,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ data: result.Items }),
-      };
-    } else {
-      return {
-        statusCode: 400,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ Message: "Missing gameId or platform parameter" }),
+        body: JSON.stringify({ Message: "Missing game Id in path parameters " }),
       };
     }
+
+
+    const gameId = parseInt(pathParams.gameId);
+    const queryParams = event.queryStringParameters || {};
+    // if (!isValidQueryParams(queryParams)) {
+    //   return {
+    //     statusCode: 400,
+    //     headers: { "content-type": "application/json" },
+    //     body: JSON.stringify({
+    //       message: "Incorrect query parameters. Must match schema",
+    //       schema: schema.definitions["GameQueryParams"],
+    //     }),
+    //   };
+    // }
+
+    let commandInput: QueryCommandInput = {
+      TableName: process.env.TABLE_NAME,
+      KeyConditionExpression: "game_id = :g",
+      ExpressionAttributeValues: {
+        ":g": gameId,
+      },
+    };
+
+    if (queryParams.name) {
+      commandInput.KeyConditionExpression += " and begins_with(#name, :n)";
+      commandInput.ExpressionAttributeNames = { "#name": "name" };
+      commandInput.ExpressionAttributeValues![":n"] = queryParams.name;
+    }
+
+    const commandOutput = await ddbDocClient.send(new QueryCommand(commandInput));
+    if (!commandOutput.Items || commandOutput.Items.length === 0) {
+      return {
+        statusCode: 404,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: "No items found with the provided criteria" }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ data: commandOutput.Items }),
+    };
   } catch (error: any) {
-    console.log(JSON.stringify(error));
+    console.error("Error: ", error);
     return {
       statusCode: 500,
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({ error }),
     };
   }
