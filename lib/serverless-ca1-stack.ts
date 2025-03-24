@@ -115,11 +115,24 @@ export class ServerlessCa1Stack extends cdk.Stack {
       }),
     });
 
+    const translateGameFn = new lambdanode.NodejsFunction(this, "TranslateGameFn", {
+      architecture: lambda.Architecture.ARM_64,
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: `${__dirname}/../lambdas/translate.ts`,
+      timeout: cdk.Duration.seconds(10),
+      memorySize: 128,
+      environment: {
+        TABLE_NAME: gamesTable.tableName,
+        REGION: 'eu-west-1',
+      },
+    });
+
     //Permissions
     gamesTable.grantReadData(getGameByIdFn)
     gamesTable.grantReadData(getAllGamesFn)
     gamesTable.grantReadWriteData(newGameFn)
     gamesTable.grantReadWriteData(updateGameFn);
+    gamesTable.grantReadWriteData(translateGameFn);
 
     
     //REST API
@@ -171,5 +184,9 @@ export class ServerlessCa1Stack extends cdk.Stack {
       new apig.LambdaIntegration(updateGameFn, { proxy: true }), 
       // { apiKeyRequired: true });
     )
+    const translationResource = updateResource.addResource("translation");
+    translationResource.addMethod(
+      "GET", 
+      new apig.LambdaIntegration(translateGameFn, { proxy: true }));
   }
 }
